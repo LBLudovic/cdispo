@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Détail</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="assets/app.css"/>
+</head>
+<body data-page="establishment">
+<div class="app">
+  <header>
+    <div class="row">
+      <div>
+        <div class="title">Établissement</div>
+        <div class="sub"><i class="fa-solid fa-circle-info"></i> Détails</div>
+      </div>
+      <a class="btn small" href="map.html"><i class="fa-solid fa-map"></i> Carte</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero" aria-label="Bannière">
+      <div class="hero-top">
+        <button class="btn icon" type="button" id="backBtn" aria-label="Retour"><i class="fa-solid fa-arrow-left"></i></button>
+        <button class="btn icon" data-fav aria-label="Favori"><i class="fa-regular fa-heart"></i></button>
+      </div>
+      <div class="hero-title">
+        <h1 id="estName">Établissement</h1>
+        <div class="pill2" id="estRating"><i class="fa-solid fa-star"></i> <span></span></div>
+      </div>
+    </section>
+
+    <div class="info-grid">
+      <div class="info-chip"><i class="fa-solid fa-location-dot"></i><div><div class="k">Adresse</div><div class="v" id="estAddress"></div></div></div>
+      <div class="info-chip"><i class="fa-solid fa-martini-glass-citrus"></i><div><div class="k">Type</div><div class="v" id="estType"></div></div></div>
+      <div class="info-chip"><i class="fa-solid fa-clock"></i><div><div class="k">Horaires</div><div class="v">18:00 – 02:00</div></div></div>
+      <div class="info-chip"><i class="fa-solid fa-hourglass-half"></i><div><div class="k">Affluence</div><div class="v" id="estWait"></div></div></div>
+      <div class="info-chip"><i class="fa-solid fa-euro-sign"></i><div><div class="k">Prix</div><div class="v" id="estPrice"></div></div></div>
+      <div class="info-chip"><i class="fa-solid fa-music"></i><div><div class="k">Ambiance</div><div class="v" id="estVibe"></div></div></div>
+    </div>
+
+
+    <section class="section" style="margin-top:14px;">
+      <div class="section-head"><h3>📸 Photos</h3></div>
+      <div class="h" id="photoRow"></div>
+    </section>
+
+    <section class="section" style="margin-top:14px;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn primary" type="button" id="openReserve" style="flex:1; min-width:160px;"><i class="fa-solid fa-calendar-check"></i> Réserver</button>
+        <a class="btn" href="#" onclick="showToast('Appeler'); return false;" style="flex:1; min-width:140px;"><i class="fa-solid fa-phone"></i> Appeler</a>
+        <a class="btn" href="#" onclick="showToast('Itinéraire'); return false;" style="flex:1; min-width:140px;"><i class="fa-solid fa-route"></i> Itinéraire</a>
+        <a class="btn" href="#" onclick="showToast('Partager'); return false;" style="flex:1; min-width:140px;"><i class="fa-solid fa-share-nodes"></i> Partager</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>🍴 Menu</h3>
+      <div id="menuBlock"></div>
+    </section>
+
+    <section class="section">
+      <h3>⭐ Avis</h3>
+      <div id="reviewsBlock"></div>
+    </section>
+
+    <section class="section">
+      <h3>🎉 Événements</h3>
+      <div id="eventsBlock"></div>
+    </section>
+
+  </main>
+
+  <nav class="bottom" aria-label="Navigation principale">
+  <a href="home.html" data-page="home" class=""><i class="fa-solid fa-house"></i><span>Accueil</span></a>
+  <a href="map.html" data-page="map" class=""><i class="fa-solid fa-map"></i><span>Carte</span></a>
+  <a href="list.html" data-page="list" class=""><i class="fa-solid fa-utensils"></i><span>Étab.</span></a>
+  <a href="account.html" data-page="account" class=""><i class="fa-solid fa-user"></i><span>Compte</span></a>
+</nav>
+</div>
+
+<div class="toast" id="toast">Action</div>
+
+<div class="sheet-backdrop" id="reserve-backdrop"></div>
+<section class="sheet" id="reserve" aria-label="Réserver une table">
+  <div class="handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title">Réserver</div>
+    <button class="btn icon ghost" type="button" data-close-sheet="reserve" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <div class="field">
+    <label>Nombre de personnes</label>
+    <select><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+  </div>
+  <div class="field">
+    <label>Heure</label>
+    <select><option>19:00</option><option>20:00</option><option>21:00</option><option>22:00</option></select>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-top:14px;">
+    <button class="btn" type="button" data-close-sheet="reserve" style="flex:1;">Annuler</button>
+    <button class="btn primary" type="button" id="confirmReserve" style="flex:1;">Confirmer</button>
+  </div>
+</section>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const est = getEstById(id);
+
+  document.title = est.name;
+
+  // hero image
+  document.getElementById('hero').style.backgroundImage = `url('${estImageUrl(est)}')`;
+
+  document.getElementById('estName').textContent = est.name;
+  document.getElementById('estRating').innerHTML = `<i class="fa-solid fa-star"></i> ${est.rating}`;
+  document.getElementById('estAddress').textContent = `${est.area}, Montpellier`;
+  document.getElementById('estType').textContent = est.type;
+
+  const w = waitInfo(est);
+  document.getElementById('estWait').textContent = w.label;
+  document.getElementById('estPrice').textContent = est.price;
+  document.getElementById('estVibe').textContent = est.vibe;
+
+  document.getElementById('backBtn').addEventListener('click', ()=>{
+    if(history.length > 1) history.back();
+    else window.location.href = 'list.html';
+  });
+
+  wireSheet('reserve');
+  document.getElementById('openReserve').addEventListener('click', ()=>openSheet('reserve'));
+  document.getElementById('confirmReserve').addEventListener('click', ()=>{ closeSheet('reserve'); showToast('Réservation confirmée'); });
+
+  // Photos gallery
+  const photoRow = document.getElementById('photoRow');
+  if(photoRow && Array.isArray(est.images)){
+    photoRow.innerHTML = est.images.map((fn, i) => `
+      <a class="card" href="#" data-photo="${i}" style="min-width:240px; max-width:260px; text-decoration:none;">
+        <div class="card-top" style="height:140px; background-image:url('assets/images/${fn}');"></div>
+      </a>
+    `).join('');
+    // Lightbox (simple)
+    photoRow.querySelectorAll('[data-photo]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const idx = parseInt(a.getAttribute('data-photo'),10);
+        const url = `assets/images/${est.images[idx]}`;
+        const overlay = document.createElement('div');
+        overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:120;display:grid;place-items:center;padding:18px;";
+        overlay.innerHTML = `
+          <div style="max-width:900px;width:100%;">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+              <button class="btn icon" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="card" style="overflow:hidden;">
+              <img src="${url}" alt="Photo" style="width:100%;height:auto;display:block;">
+            </div>
+          </div>
+        `;
+        overlay.addEventListener('click', (ev)=>{
+          if(ev.target === overlay) overlay.remove();
+        });
+        overlay.querySelector('button').addEventListener('click', ()=>overlay.remove());
+        document.body.appendChild(overlay);
+      });
+    });
+  }
+
+  // Menu
+  const menuBlock = document.getElementById('menuBlock');
+  if(menuBlock && Array.isArray(est.menu)){
+    menuBlock.innerHTML = est.menu.map(sec => `
+      <div class="card" style="padding:14px; margin-bottom:10px;">
+        <div style="font-weight:900; margin-bottom:10px;">${sec.section}</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${sec.items.map(it => `
+            <div style="display:flex; justify-content:space-between; gap:12px;">
+              <div style="color:var(--text); font-weight:650;">${it.name}</div>
+              <div style="color:var(--muted); font-weight:850; white-space:nowrap;">${it.price}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Reviews
+  const reviewsBlock = document.getElementById('reviewsBlock');
+  if(reviewsBlock && Array.isArray(est.reviews)){
+    const stars = (n)=>'★'.repeat(n) + '☆'.repeat(5-n);
+    reviewsBlock.innerHTML = `
+      <div class="card" style="padding:14px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${est.reviews.slice(0,5).map(r => `
+            <div style="border-bottom:1px solid var(--border); padding-bottom:12px;">
+              <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+                <div style="font-weight:850;">${r.name}</div>
+                <div style="color:var(--muted); font-size:12.5px;">${r.date}</div>
+              </div>
+              <div style="margin-top:6px; color:var(--accent); font-weight:900; letter-spacing:.2px;">${stars(r.rating)}</div>
+              <div style="margin-top:6px; color:var(--muted); line-height:1.45;">${r.text}</div>
+            </div>
+          `).join('')}
+          <button class="btn" type="button" id="moreReviews">Voir plus</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('moreReviews')?.addEventListener('click', ()=>showToast("Chargement des avis"));
+  }
+
+  // Events
+  const eventsBlock = document.getElementById('eventsBlock');
+  if(eventsBlock && Array.isArray(est.events)){
+    eventsBlock.innerHTML = `
+      <div class="card" style="padding:14px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${est.events.slice(0,4).map(ev => `
+            <div style="border-bottom:1px solid var(--border); padding-bottom:12px;">
+              <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+                <div style="font-weight:900;">${ev.title}</div>
+                <div style="color:var(--muted); font-size:12.5px;">${ev.date}</div>
+              </div>
+              <div style="margin-top:6px; color:var(--muted); line-height:1.45;">${ev.desc}</div>
+            </div>
+          `).join('')}
+          <button class="btn primary" type="button" id="saveEvent">Ajouter au calendrier</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('saveEvent')?.addEventListener('click', ()=>showToast("Événement ajouté"));
+  }
+
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const id = new URLSearchParams(location.search).get('id');
+  const est = window.APP_DATA.establishments.find(e=>String(e.id)===String(id)) || window.APP_DATA.establishments[0];
+
+  // MENU
+  const menuSec = document.querySelector('section h3:nth-of-type(1)')?.parentElement;
+  if(menuSec){
+    menuSec.querySelector('.card').innerHTML = est.menu.map(s=>`
+      <strong>${s.section}</strong>
+      <ul>${s.items.map(i=>`<li>${i.name} — ${i.price}</li>`).join('')}</ul>
+    `).join('');
+  }
+
+  // REVIEWS
+  const revSec = document.querySelector('section h3:nth-of-type(2)')?.parentElement;
+  if(revSec){
+    revSec.querySelector('.card').innerHTML = est.reviews.map(r=>`
+      <p><strong>${r.name}</strong> (${r.rating}★) – <em>${r.date}</em><br>${r.text}</p>
+    `).join('');
+  }
+
+  // EVENTS
+  const evSec = document.querySelector('section h3:nth-of-type(3)')?.parentElement;
+  if(evSec){
+    evSec.querySelector('.card').innerHTML = est.events.map(ev=>`
+      <p><strong>${ev.title}</strong><br>${ev.date}<br>${ev.desc}</p>
+    `).join('');
+  }
+});
+</script>
+
+</body>
+</html>

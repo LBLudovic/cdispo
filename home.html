@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Accueil</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="assets/app.css"/>
+</head>
+<body data-page="home">
+<div class="app">
+  <header>
+    <div class="row">
+      <div>
+        <div class="title" id="helloTitle">Bonsoir</div>
+        <div class="sub" id="locSub"><i class="fa-solid fa-location-dot"></i> </div>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:10px;">
+        <a class="btn icon" href="#" data-toast="Notifications" aria-label="Notifications"><i class="fa-regular fa-bell"></i></a>
+        <a class="btn icon" href="account.html" aria-label="Compte"><i class="fa-regular fa-user"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="section-head"><h3>⭐ Recommandés pour toi</h3></div>
+      <div class="h" id="recoRow"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>🍹 Happy Hour</h3></div>
+      <div class="h" id="happyRow"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>🔥 Populaires</h3></div>
+      <div class="h" id="trendRow"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h3>🎉 Événements</h3></div>
+      <div class="h" id="eventRow"></div>
+    </section>
+  </main>
+
+  <nav class="bottom" aria-label="Navigation principale">
+  <a href="home.html" data-page="home" class="active"><i class="fa-solid fa-house"></i><span>Accueil</span></a>
+  <a href="map.html" data-page="map" class=""><i class="fa-solid fa-map"></i><span>Carte</span></a>
+  <a href="list.html" data-page="list" class=""><i class="fa-solid fa-utensils"></i><span>Étab.</span></a>
+  <a href="account.html" data-page="account" class=""><i class="fa-solid fa-user"></i><span>Compte</span></a>
+</nav>
+</div>
+
+<div class="toast" id="toast">Action</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const u = window.APP_DATA.user;
+  document.getElementById('helloTitle').textContent = `Bonsoir ${u.name} 👋`;
+  document.getElementById('locSub').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${u.locationLabel}`;
+
+  const ests = window.APP_DATA.establishments;
+
+  function card(est){
+    const w = waitInfo(est);
+    const img = estImageUrl(est);
+    return `
+      <article class="card" style="min-width:240px; max-width:260px;">
+        <div class="card-top" style="height:120px; background-image:url('${img}');">
+          <div class="pill"><i class="fa-solid fa-star"></i> ${est.rating}</div>
+          <div class="status"><span style="width:8px;height:8px;border-radius:99px;background:${w.color};display:inline-block;"></span>${w.label}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <h3 class="name">${est.name}</h3>
+            <span class="rating"><i class="fa-solid fa-location-dot"></i> ${est.distanceKm.toFixed(1)} km</span>
+          </div>
+          <div class="meta">
+            <span><i class="fa-solid fa-martini-glass-citrus"></i> ${est.type}</span>
+            <span><i class="fa-solid fa-map-pin"></i> ${est.area}</span>
+          </div>
+          <div class="card-actions">
+            <button class="fav" type="button" data-fav aria-label="Favori"><i class="fa-regular fa-heart"></i></button>
+            <a class="btn small primary" href="establishment.html?id=${est.id}" style="flex:1; text-align:center;">Voir</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  document.getElementById('recoRow').innerHTML = ests.slice(0,3).map(card).join('');
+  document.getElementById('happyRow').innerHTML = ests.slice(1,4).map(card).join('');
+  document.getElementById('trendRow').innerHTML = ests.slice(2,5).map(card).join('');
+  
+  // Events: flatten establishments events
+  const allEvents = ests.flatMap(est => (est.events || []).map(ev => ({...ev, estId: est.id, estName: est.name, estType: est.type, img: est.img })));
+  const eventCards = allEvents.slice(0,6).map(ev => `
+    <article class="card" style="min-width:240px; max-width:260px;">
+      <div class="card-top" style="height:120px; background-image:url('${estImageUrl({img: ev.img})}');">
+        <div class="pill"><i class="fa-solid fa-calendar"></i> ${ev.date}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-head">
+          <h3 class="name">${ev.title}</h3>
+          <span class="rating"><i class="fa-solid fa-star"></i> ${ev.estName}</span>
+        </div>
+        <div class="meta">
+          <span><i class="fa-solid fa-martini-glass-citrus"></i> ${ev.estType}</span>
+          <span><i class="fa-solid fa-circle-info"></i> ${ev.desc}</span>
+        </div>
+        <div class="card-actions">
+          <a class="btn small primary" href="establishment.html?id=${ev.estId}" style="flex:1; text-align:center;">Voir</a>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  document.getElementById('eventRow').innerHTML = eventCards;
+});
+</script>
+</body>
+</html>

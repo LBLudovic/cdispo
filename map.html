@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Carte</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="assets/app.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body data-page="map">
+<div class="app">
+  <header id="hdr">
+    <div class="row">
+      <div>
+        <div class="title">Carte</div>
+        <div class="sub"><i class="fa-solid fa-location-dot"></i> Montpellier</div>
+      </div>
+      <button class="btn" type="button" id="openFilters"><i class="fa-solid fa-sliders"></i> Filtres</button>
+    </div>
+  </header>
+
+  <main class="map-main">
+    <div class="map-layer">
+      <div class="map-top-actions">
+        <div class="map-chip">
+          <i class="fa-solid fa-layer-group"></i>
+          <div>
+            <div style="font-weight:850; font-size:13px;">Affluence</div>
+            <small>Vert = dispo • Rouge = attente</small>
+          </div>
+        </div>
+      </div>
+      <div id="map" aria-label="Carte OpenStreetMap"></div>
+    </div>
+  </main>
+
+  <nav class="bottom" aria-label="Navigation principale">
+  <a href="home.html" data-page="home" class=""><i class="fa-solid fa-house"></i><span>Accueil</span></a>
+  <a href="map.html" data-page="map" class="active"><i class="fa-solid fa-map"></i><span>Carte</span></a>
+  <a href="list.html" data-page="list" class=""><i class="fa-solid fa-utensils"></i><span>Étab.</span></a>
+  <a href="account.html" data-page="account" class=""><i class="fa-solid fa-user"></i><span>Compte</span></a>
+</nav>
+</div>
+
+<div class="toast" id="toast">Action</div>
+
+<div class="sheet-backdrop" id="filters-backdrop"></div>
+<section class="sheet" id="filters" aria-label="Filtres">
+  <div class="handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title">Filtres</div>
+    <button class="btn icon ghost" type="button" data-close-sheet="filters" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <div class="field">
+    <label>Type</label>
+    <select>
+      <option>Tous</option>
+      <option>Cocktail bar</option>
+      <option>Resto-bar</option>
+      <option>Brasserie</option>
+      <option>Wine bar</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Temps d'attente max (min)</label>
+    <input type="range" min="0" max="45" value="25"/>
+  </div>
+
+  <div class="field">
+    <label>Ambiance</label>
+    <select>
+      <option>Toutes</option>
+      <option>Lounge</option>
+      <option>Festif</option>
+      <option>Chill</option>
+      <option>Afterwork</option>
+    </select>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-top:14px;">
+    <button class="btn" type="button" data-close-sheet="filters" style="flex:1;">Annuler</button>
+    <button class="btn primary" type="button" id="applyFilters" style="flex:1;">Appliquer</button>
+  </div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  // header height var for map height calculation
+  function setHeaderVar(){
+    const h = document.getElementById('hdr')?.offsetHeight || 64;
+    document.documentElement.style.setProperty('--header-h', h + 'px');
+  }
+  setHeaderVar();
+
+  wireSheet('filters');
+  document.getElementById('openFilters').addEventListener('click', ()=>{ openSheet('filters'); setTimeout(()=>map.invalidateSize(), 220); });
+  document.getElementById('applyFilters').addEventListener('click', ()=>{ closeSheet('filters'); showToast('Filtres appliqués'); setTimeout(()=>map.invalidateSize(), 220); });
+
+  // Map setup
+  const center = [43.6108, 3.8767];
+  window.map = L.map('map', { zoomControl:false }).setView(center, 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom:19, attribution:'&copy; OpenStreetMap'
+  }).addTo(map);
+  L.control.zoom({ position:'bottomright' }).addTo(map);
+
+  const coords = [
+    [43.6106, 3.8732],
+    [43.6087, 3.8796],
+    [43.6089, 3.8906],
+    [43.6033, 3.8984],
+    [43.6180, 3.8840],
+    [43.6217, 3.8692]
+  ];
+  const ests = window.APP_DATA.establishments.slice(0, coords.length);
+
+  function waitColor(est){
+    if(est.spots > 0) return '#22c55e';
+    const w = est.waitMin || 0;
+    if(w <= 10) return '#f59e0b';
+    if(w <= 25) return '#fb923c';
+    return '#ef4444';
+  }
+  function waitLabel(est){
+    if(est.spots > 0) return `✅ ${est.spots} places dispo`;
+    return `⏳ ${est.waitMin} min`;
+  }
+
+  ests.forEach((est, idx)=>{
+    const icon = L.divIcon({
+      className:'',
+      html:`<div class="fa-pin-marker" style="position:relative;">
+              <i class="fa-solid fa-location-dot" style="color:${waitColor(est)};"></i>
+              <span class="dot"></span>
+            </div>`,
+      iconSize:[34,34],
+      iconAnchor:[17,34]
+    });
+    const marker = L.marker(coords[idx], { icon }).addTo(map);
+
+    const popupHtml = `
+      <div>
+        <div style="font-weight:850; margin:0 0 6px;">${est.name}</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12.5px;">
+          <span><i class="fa-solid fa-star"></i> ${est.rating}</span>
+          <span><i class="fa-solid fa-location-dot"></i> ${est.area}</span>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12.5px; margin-top:6px;">
+          <span><i class="fa-solid fa-martini-glass-citrus"></i> ${est.type}</span>
+          <span>${waitLabel(est)}</span>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:10px;">
+          <a class="btn small primary" href="establishment.html?id=${est.id}" style="flex:1; text-align:center;">Voir</a>
+          <a class="btn small" href="#" onclick="showToast('Itinéraire'); return false;"><i class="fa-solid fa-route"></i></a>
+        </div>
+      </div>
+    `;
+    marker.bindPopup(popupHtml, { closeButton:true, autoPan:true });
+  });
+
+  setTimeout(()=>map.invalidateSize(), 80);
+  window.addEventListener('resize', ()=>{ setHeaderVar(); setTimeout(()=>map.invalidateSize(), 80); });
+});
+</script>
+</body>
+</html>

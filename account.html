@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Compte</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="assets/app.css"/>
+</head>
+<body data-page="account">
+<div class="app">
+  <header>
+    <div class="row">
+      <div>
+        <div class="title">Compte</div>
+        <div class="sub"><i class="fa-solid fa-gear"></i> Préférences</div>
+      </div>
+      <a class="btn small" href="#" onclick="showToast('Déconnexion'); return false;"><i class="fa-solid fa-right-from-bracket"></i></a>
+    </div>
+  </header>
+
+  <main>
+    <div class="card" style="padding:14px; display:flex; gap:12px; align-items:center;">
+      <div style="width:62px; height:62px; border-radius:18px; background:rgba(255,255,255,.08); display:grid; place-items:center;">
+        <i class="fa-solid fa-user" style="font-size:22px; color:rgba(255,255,255,.75);"></i>
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:900;" id="userName">Snow</div>
+        <div style="color:var(--muted); font-size:12.5px;" id="userStatus">Client</div>
+        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+          <a class="btn small" href="#" onclick="showToast('Modifier profil'); return false;"><i class="fa-solid fa-pen"></i> Modifier</a>
+          <a class="btn small" href="#" onclick="showToast('Connexion'); return false;"><i class="fa-solid fa-lock"></i> Connexion</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <h3>❤️ Favoris</h3>
+      <div id="favList" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </section>
+
+    <section class="section">
+      <h3>📅 Réservations</h3>
+      <div class="card" style="padding:14px; color:var(--muted);">Aucune réservation en attente.</div>
+    </section>
+
+    <section class="section">
+      <h3>⚙️ Préférences</h3>
+      <div class="card" style="padding:14px;">
+        <div class="field">
+          <label>Ambiance favorite</label>
+          <select><option>Lounge</option><option>Afterwork</option><option>Festif</option><option>Chill</option></select>
+        </div>
+        <div class="field">
+          <label>Type préféré</label>
+          <select><option>Resto-bar</option><option>Cocktail Bar</option><option>Wine bar</option><option>Brasserie</option></select>
+        </div>
+        <button class="btn primary" style="width:100%; margin-top:12px;" type="button" onclick="showToast('Préférences enregistrées')">Enregistrer</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom" aria-label="Navigation principale">
+  <a href="home.html" data-page="home" class=""><i class="fa-solid fa-house"></i><span>Accueil</span></a>
+  <a href="map.html" data-page="map" class=""><i class="fa-solid fa-map"></i><span>Carte</span></a>
+  <a href="list.html" data-page="list" class=""><i class="fa-solid fa-utensils"></i><span>Étab.</span></a>
+  <a href="account.html" data-page="account" class="active"><i class="fa-solid fa-user"></i><span>Compte</span></a>
+</nav>
+</div>
+
+<div class="toast" id="toast">Action</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  const u = window.APP_DATA.user;
+  document.getElementById('userName').textContent = u.name;
+  document.getElementById('userStatus').textContent = u.status;
+
+  const ests = window.APP_DATA.establishments.slice(0,3);
+  document.getElementById('favList').innerHTML = ests.map(e=>{
+    const w = waitInfo(e);
+    return `
+      <a class="card" href="establishment.html?id=${e.id}" style="text-decoration:none;">
+        <div class="card-top" style="height:110px; background-image:url('${estImageUrl(e)}');">
+          <div class="pill"><i class="fa-solid fa-star"></i> ${e.rating}</div>
+          <div class="status"><span style="width:8px;height:8px;border-radius:99px;background:${w.color};display:inline-block;"></span>${w.label}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <h3 class="name">${e.name}</h3>
+            <span class="rating"><i class="fa-solid fa-location-dot"></i> ${e.distanceKm.toFixed(1)} km</span>
+          </div>
+          <div class="meta">
+            <span><i class="fa-solid fa-martini-glass-citrus"></i> ${e.type}</span>
+            <span><i class="fa-solid fa-map-pin"></i> ${e.area}</span>
+          </div>
+        </div>
+      </a>
+    `;
+  }).join('');
+});
+</script>
+</body>
+</html>
