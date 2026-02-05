@@ -24,6 +24,33 @@
 
   --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
 }
+
+:root {
+  /* Brand */
+  --primary: #1f3b5c;        /* Bleu Cdispo */
+  --secondary: #ff3b1f;      /* Rouge Cdispo */
+  --accent: #ff6a4d;         /* Rouge plus doux */
+
+  /* UI */
+  --bg: #0b0f14;             /* Fond global */
+  --surface: #141a22;        /* Cards */
+  --border: #222a36;
+
+  /* Text */
+  --text: #f4f6f8;
+  --muted: #9aa4b2;
+
+  /* States */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+
+
+
+
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
