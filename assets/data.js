@@ -1,19 +1,25 @@
 window.APP_DATA = {
   "user": {
     "name": "Snow",
-    "locationLabel": "Montpellier",
-    "status": "Client"
+    "locationLabel": "Montpellier"
   },
   "establishments": [
     {
       "id": 1,
       "name": "Le Verre Volant",
       "type": "Resto-bar",
+      "rating": 4.5,
       "area": "Écusson",
-      "rating": 4.6,
-      "distanceKm": 0.8,
+      "distanceKm": 0.6,
       "waitMin": 0,
       "spots": 12,
+      "price": "€€",
+      "vibe": "Afterwork",
+      "coords": [
+        43.6106,
+        3.8732
+      ],
+      "img": "e1.jpg",
       "images": [
         "e1.jpg",
         "e2.jpg",
@@ -47,76 +53,53 @@ window.APP_DATA = {
             {
               "name": "Patatas bravas",
               "price": "8€"
-            },
-            {
-              "name": "Houmous maison",
-              "price": "7€"
             }
           ]
         }
       ],
       "reviews": [
         {
-          "name": "Romain",
-          "rating": 4,
-          "date": "Il y a 2 mois",
-          "text": "Un peu d’attente mais ça vaut le coup."
+          "name": "Julie",
+          "rating": 5,
+          "date": "Il y a 1 semaine",
+          "text": "Ambiance au top et cocktails excellents."
         },
         {
-          "name": "Inès",
+          "name": "Marc",
           "rating": 4,
-          "date": "Il y a 2 semaines",
-          "text": "Super spot, on reviendra !"
-        },
-        {
-          "name": "Inès",
-          "rating": 4,
-          "date": "Il y a 1 mois",
-          "text": "Très bon rapport qualité/prix."
-        },
-        {
-          "name": "Sarah",
-          "rating": 4,
-          "date": "Il y a 1 mois",
-          "text": "Super spot, on reviendra !"
-        },
-        {
-          "name": "Camille",
-          "rating": 4,
-          "date": "Il y a 3 jours",
-          "text": "Super spot, on reviendra !"
+          "date": "Il y a 3 semaines",
+          "text": "Parfait pour l’afterwork."
         }
       ],
       "events": [
         {
           "title": "DJ Set",
-          "date": "Samedi 21:00",
-          "desc": "DJ set house & disco"
+          "date": "Vendredi 21h",
+          "desc": "House & disco"
         },
         {
-          "title": "Soirée Quiz",
-          "date": "Jeudi 20:30",
-          "desc": "Quiz par équipes + lots"
-        },
-        {
-          "title": "Soirée Quiz",
-          "date": "Dimanche 20:30",
-          "desc": "Quiz par équipes + lots"
+          "title": "Happy Hour",
+          "date": "18h–20h",
+          "desc": "Cocktails à prix réduit"
         }
-      ],
-      "img": "e1.jpg",
-      "price": "€€",
-      "vibe": "Lounge"
+      ]
     },
     {
       "id": 2,
-      "name": "Tapas & Tonic",
-      "type": "Tapas / Cocktails",
-      "area": "Comédie",
-      "rating": 4.4,
-      "distanceKm": 1.2,
-      "waitMin": 8,
+      "name": "Rooftop Nova",
+      "type": "Rooftop Bar",
+      "rating": 4.7,
+      "area": "Antigone",
+      "distanceKm": 1.4,
+      "waitMin": 20,
       "spots": 0,
+      "price": "€€€",
+      "vibe": "Rooftop",
+      "coords": [
+        43.6087,
+        3.8796
+      ],
+      "img": "e2.jpg",
       "images": [
         "e2.jpg",
         "e3.jpg",
@@ -127,85 +110,258 @@ window.APP_DATA = {
           "section": "Signatures",
           "items": [
             {
-              "name": "Smoky Paloma",
-              "price": "11€"
-            },
-            {
-              "name": "Espresso Martini",
+              "name": "Basil Smash",
               "price": "12€"
             },
             {
-              "name": "Basil Smash",
-              "price": "11€"
-            }
-          ]
-        },
-        {
-          "section": "Softs",
-          "items": [
-            {
-              "name": "Ginger beer",
-              "price": "4€"
-            },
-            {
-              "name": "Citronnade maison",
-              "price": "5€"
+              "name": "Espresso Martini",
+              "price": "13€"
             }
           ]
         }
       ],
       "reviews": [
         {
-          "name": "Romain",
-          "rating": 5,
-          "date": "Il y a 3 jours",
-          "text": "Parfait pour l’afterwork, je recommande."
-        },
-        {
-          "name": "Marc",
-          "rating": 5,
-          "date": "Il y a 1 semaine",
-          "text": "Cocktails très bons, belle playlist."
-        },
-        {
-          "name": "Nicolas",
-          "rating": 4,
-          "date": "Il y a 1 mois",
-          "text": "Super spot, on reviendra !"
-        },
-        {
           "name": "Inès",
           "rating": 5,
-          "date": "Il y a 1 mois",
-          "text": "Cocktails très bons, belle playlist."
-        },
-        {
-          "name": "Nicolas",
-          "rating": 5,
-          "date": "Il y a 2 mois",
-          "text": "Très bon rapport qualité/prix."
+          "date": "Il y a 2 semaines",
+          "text": "Vue incroyable au coucher du soleil."
         }
       ],
       "events": [
         {
-          "title": "DJ Set",
-          "date": "Jeudi 21:00",
-          "desc": "DJ set house & disco"
-        },
+          "title": "Sunset DJ",
+          "date": "Samedi 20h",
+          "desc": "DJ set rooftop"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "La Cave du Faubourg",
+      "type": "Wine Bar",
+      "rating": 4.6,
+      "area": "Boutonnet",
+      "distanceKm": 1.8,
+      "waitMin": 0,
+      "spots": 6,
+      "price": "€€",
+      "vibe": "Cosy",
+      "coords": [
+        43.618,
+        3.884
+      ],
+      "img": "e3.jpg",
+      "images": [
+        "e3.jpg",
+        "e5.jpg",
+        "e6.jpg"
+      ],
+      "menu": [
         {
-          "title": "Happy Hour",
-          "date": "Vendredi 18:00–20:00",
-          "desc": "Cocktails à prix doux"
-        },
-        {
-          "title": "DJ Set",
-          "date": "Samedi 21:00",
-          "desc": "DJ set house & disco"
+          "section": "Vins",
+          "items": [
+            {
+              "name": "Verre rouge",
+              "price": "6€"
+            },
+            {
+              "name": "Verre blanc",
+              "price": "6€"
+            }
+          ]
         }
       ],
-      "img": "e2.jpg",
+      "reviews": [
+        {
+          "name": "Sarah",
+          "rating": 5,
+          "date": "Il y a 1 mois",
+          "text": "Très bonne sélection de vins."
+        }
+      ],
+      "events": [
+        {
+          "title": "Dégustation",
+          "date": "Jeudi 19h",
+          "desc": "Vigneron invité"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Bistrot Central",
+      "type": "Brasserie",
+      "rating": 4.3,
+      "area": "Centre",
+      "distanceKm": 1.0,
+      "waitMin": 10,
+      "spots": 10,
       "price": "€€",
-      "vibe": "Lounge"
+      "vibe": "Convivial",
+      "coords": [
+        43.619968,
+        3.877624
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 5,
+      "name": "Casa Tapas",
+      "type": "Tapas Bar",
+      "rating": 4.5,
+      "area": "Beaux-Arts",
+      "distanceKm": 1.3,
+      "waitMin": 10,
+      "spots": 10,
+      "price": "€",
+      "vibe": "Convivial",
+      "coords": [
+        43.614976,
+        3.886428
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 6,
+      "name": "Le Zinc Bleu",
+      "type": "Cocktail Bar",
+      "rating": 4.3,
+      "area": "Port Marianne",
+      "distanceKm": 2.9,
+      "waitMin": 0,
+      "spots": 4,
+      "price": "€€",
+      "vibe": "Convivial",
+      "coords": [
+        43.60314,
+        3.869247
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 7,
+      "name": "Chez Marcel",
+      "type": "Brasserie",
+      "rating": 4.3,
+      "area": "Figuerolles",
+      "distanceKm": 2.8,
+      "waitMin": 25,
+      "spots": 6,
+      "price": "€€",
+      "vibe": "Convivial",
+      "coords": [
+        43.613887,
+        3.871211
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 8,
+      "name": "Skyline",
+      "type": "Rooftop Bar",
+      "rating": 4.7,
+      "area": "Odysseum",
+      "distanceKm": 1.5,
+      "waitMin": 35,
+      "spots": 0,
+      "price": "€€€",
+      "vibe": "Convivial",
+      "coords": [
+        43.617457,
+        3.883357
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 9,
+      "name": "Le Comptoir Sud",
+      "type": "Resto-bar",
+      "rating": 4.7,
+      "area": "Gambetta",
+      "distanceKm": 1.0,
+      "waitMin": 15,
+      "spots": 0,
+      "price": "€€",
+      "vibe": "Convivial",
+      "coords": [
+        43.611392,
+        3.886342
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
+    },
+    {
+      "id": 10,
+      "name": "Vino Tempo",
+      "type": "Wine Bar",
+      "rating": 4.2,
+      "area": "Arceaux",
+      "distanceKm": 2.8,
+      "waitMin": 35,
+      "spots": 6,
+      "price": "€€",
+      "vibe": "Convivial",
+      "coords": [
+        43.616714,
+        3.871586
+      ],
+      "img": "e1.jpg",
+      "images": [
+        "e1.jpg",
+        "e2.jpg",
+        "e3.jpg"
+      ],
+      "menu": [],
+      "reviews": [],
+      "events": []
     }
   ]
 };
