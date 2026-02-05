@@ -110,16 +110,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     maxZoom:19, attribution:'&copy; OpenStreetMap'
   }).addTo(map);
   L.control.zoom({ position:'bottomright' }).addTo(map);
-
-  const coords = [
-    [43.6106, 3.8732],
-    [43.6087, 3.8796],
-    [43.6089, 3.8906],
-    [43.6033, 3.8984],
-    [43.6180, 3.8840],
-    [43.6217, 3.8692]
-  ];
-  const ests = window.APP_DATA.establishments.slice(0, coords.length);
+  const ests = (window.APP_DATA.establishments || []).filter(e => Array.isArray(e.coords) && e.coords.length === 2);
 
   function waitColor(est){
     if(est.spots > 0) return '#22c55e';
@@ -143,7 +134,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       iconSize:[34,34],
       iconAnchor:[17,34]
     });
-    const marker = L.marker(coords[idx], { icon }).addTo(map);
+    const marker = L.marker(est.coords, { icon }).addTo(map);
 
     const popupHtml = `
       <div>
@@ -165,7 +156,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
     marker.bindPopup(popupHtml, { closeButton:true, autoPan:true });
   });
 
-  setTimeout(()=>map.invalidateSize(), 80);
+  if(ests.length){
+  const bounds = L.latLngBounds(ests.map(e => e.coords));
+  map.fitBounds(bounds, { padding: [40, 40] });
+}
+setTimeout(()=>map.invalidateSize(), 80);
   window.addEventListener('resize', ()=>{ setHeaderVar(); setTimeout(()=>map.invalidateSize(), 80); });
 });
 </script>
